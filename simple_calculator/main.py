@@ -3,6 +3,7 @@
 import operator
 import sys
 import types
+import numbers
 from functools import reduce
 from collections.abc import Iterable
 
@@ -81,6 +82,22 @@ class SimpleCalculator:
         # Return a fresh iterator over the validated data
         return iter(items)
 
+    @staticmethod
+    def _is_collection_of_numbers(obj):
+        """
+        Return True if *obj* looks like a container of numbers.
+
+        * It must be iterable (but not a string/bytes).
+        * It must **not** be an instance of numbers.Number – because a
+          numeric scalar can be iterable (e.g. numpy.ndarray) and we want
+          to treat it as a scalar.
+        """
+        if isinstance(obj, (str, bytes)):
+            return False
+        if isinstance(obj, numbers.Number):
+            return False
+        return isinstance(obj, Iterable)
+
     # --------------------------------------------------------------------- #
     # Public API
     # --------------------------------------------------------------------- #
@@ -99,27 +116,26 @@ class SimpleCalculator:
         """
         Multiply numbers.
 
-        * If called with a single iterable (e.g. ``mul([1, 2, 3])``) the
-          elements of the iterable are multiplied.
-        * If called with separate numeric arguments (e.g. ``mul(1, 2, 3)``)
-          the arguments are multiplied.
-        * An empty argument list **or** an empty iterable yields ``1`` – the
-          multiplicative identity, which is the conventional and test‑expected
-          result.
+        * If called with a single *collection* (list, tuple, set, generator,
+          …) the elements of the collection are multiplied.
+        * If called with a single scalar numeric argument, that scalar is
+          returned unchanged.
+        * If called with several numeric arguments, they are multiplied.
+        * An empty argument list **or** an empty collection yields ``1``.
         """
-        # No arguments → return the multiplicative identity
+        # No arguments → multiplicative identity
         if not args:
             return 1
 
-        # Single iterable argument case
-        if len(args) == 1 and isinstance(args[0], Iterable) and not isinstance(args[0], (str, bytes)):
+        # Single argument – decide whether it is a collection or a scalar
+        if len(args) == 1 and self._is_collection_of_numbers(args[0]):
             numbers_iter = self._ensure_iterable_of_numbers(args[0])
             numbers = list(numbers_iter)
-            if not numbers:               # empty iterable
+            if not numbers:               # empty collection
                 return 1
             return reduce(operator.mul, numbers, 1)
 
-        # Regular var‑args case – each argument must be a number
+        # At this point we have either a single scalar or several scalars
         for i, v in enumerate(args):
             self._ensure_number(v, f'arg {i}')
         return reduce(operator.mul, args, 1)
