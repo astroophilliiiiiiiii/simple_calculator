@@ -11,9 +11,10 @@ class SimpleCalculator:
     # --------------------------------------------------------------------- #
     @staticmethod
     def _ensure_number(value, name='value'):
-        """Raise TypeError if *value* is not an int/float (or subclass)."""
-        if not isinstance(value, (int, float)):
-            raise TypeError(f'{name} must be a numeric type, got {type(value)!r}')
+        """Raise TypeError if *value* is not an int/float (or subclass), but **reject bool**."""
+        # bool is a subclass of int – we explicitly disallow it
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise TypeError(f'{name} must be a numeric type (int or float), got {type(value)!r}')
 
     @staticmethod
     def _ensure_iterable_of_numbers(it):
@@ -35,10 +36,12 @@ class SimpleCalculator:
         except TypeError as exc:  # pragma: no cover – defensive
             raise TypeError('`it` must be an iterable of numbers') from exc
 
-        # Validate each element is numeric
+        # Validate each element is numeric (and not a bool)
         for idx, item in enumerate(items):
-            if not isinstance(item, (int, float)):
-                raise TypeError(f'item {idx} in iterable is not numeric: {type(item)!r}')
+            if isinstance(item, bool) or not isinstance(item, (int, float)):
+                raise TypeError(
+                    f'item {idx} in iterable is not a numeric (int/float) type: {type(item)!r}'
+                )
 
         # Return a fresh iterator over the validated data
         return iter(items)
@@ -61,7 +64,7 @@ class SimpleCalculator:
         """
         Multiply all supplied numbers.
 
-        * If no arguments are given, the result is the multiplicative identity ``1``.
+        * If no arguments are given, the result is ``1`` – the multiplicative identity.
         * For a non‑empty argument list the numbers are multiplied together.
         """
         # Empty argument list → return 1 (the identity for multiplication)
