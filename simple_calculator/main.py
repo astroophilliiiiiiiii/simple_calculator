@@ -19,8 +19,7 @@ class SimpleCalculator:
     def _ensure_iterable_of_numbers(it):
         """Validate *it* is an iterable (but not a string/bytes) of numbers.
 
-        Returns a generator that yields the validated numbers one at a time.
-        This works for any finite or infinite iterable.
+        Returns a fresh iterator over the validated numbers.
         """
         # Guard against strings/bytes – they are iterable but not numeric
         if isinstance(it, (str, bytes)):
@@ -30,11 +29,19 @@ class SimpleCalculator:
         if not isinstance(it, Iterable):
             raise TypeError('`it` must be an iterable of numbers')
 
-        # Validate each element lazily and yield it
-        for idx, item in enumerate(it):
+        # Materialise the iterable so we can validate without consuming the original
+        try:
+            items = list(it)
+        except TypeError as exc:  # pragma: no cover – defensive
+            raise TypeError('`it` must be an iterable of numbers') from exc
+
+        # Validate each element is numeric
+        for idx, item in enumerate(items):
             if not isinstance(item, (int, float)):
                 raise TypeError(f'item {idx} in iterable is not numeric: {type(item)!r}')
-            yield item
+
+        # Return a fresh iterator over the validated data
+        return iter(items)
 
     # --------------------------------------------------------------------- #
     # Public API
@@ -80,12 +87,18 @@ class SimpleCalculator:
 
         * Returns 0 when no numbers satisfy the constraints.
         * Raises TypeError for non‑iterable *it* or non‑numeric elements.
+        * Raises ValueError when ``lt`` and ``ut`` are both supplied but
+          ``lt > ut`` (the interval would be empty).
         """
         # Validate thresholds first
         if lt is not None:
             self._ensure_number(lt, 'lt')
         if ut is not None:
             self._ensure_number(ut, 'ut')
+
+        # Validate that thresholds define a non‑empty interval
+        if lt is not None and ut is not None and lt > ut:
+            raise ValueError(f'lower threshold lt ({lt}) cannot be greater than upper threshold ut ({ut})')
 
         # Ensure we have a proper iterable of numbers
         iterator = self._ensure_iterable_of_numbers(it)
