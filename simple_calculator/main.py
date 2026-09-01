@@ -161,11 +161,13 @@ class SimpleCalculator:
         return reduce(operator.mul, args, 1)
 
     def div(self, a, b):
+        """Divide *a* by *b*.
+
+        Validates numeric inputs; Python's division operator raises the
+        appropriate ZeroDivisionError for a zero divisor.
+        """
         self._ensure_number(a, 'a')
         self._ensure_number(b, 'b')
-        if b == 0:
-            # Consistent, explicit error message
-            raise ZeroDivisionError('division by zero')
         return a / b
 
     def avg(self, it, lt=None, ut=None):
