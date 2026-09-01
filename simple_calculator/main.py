@@ -12,8 +12,13 @@ class SimpleCalculator:
         return a - b
 
     def mul(self, *args):
-        if not all(args):
-            raise ValueError
+        if not args:
+            return 1
+        for a in args:
+            if a is None:
+                raise ValueError("None is not a valid operand")
+            if not isinstance(a, (int, float, complex)):
+                raise TypeError(f"Unsupported operand type: {type(a)}")
         return reduce(operator.mul, args)
 
     def div(self, a, b):
