@@ -8,6 +8,16 @@ from functools import reduce
 from collections.abc import Iterable
 
 # ----------------------------------------------------------------------
+# Optional NumPy support – we only need it to recognise ndarray as a
+# collection of numbers.  If NumPy is not available the code must keep
+# working, so we import it lazily and fall back to ``None``.
+# ----------------------------------------------------------------------
+try:                     # pragma: no cover – exercised only when NumPy is present
+    import numpy as np
+except Exception:       # pragma: no cover – NumPy not installed or broken
+    np = None
+
+# ----------------------------------------------------------------------
 # Docker import – safe fallback stub
 # ----------------------------------------------------------------------
 def _dummy_docker_module():
@@ -24,21 +34,15 @@ def _dummy_docker_module():
     dummy.from_env = _from_env
     return dummy
 
-# Try to import the real Docker package.  If anything goes wrong (package not
-# installed, daemon not reachable, etc.) we fall back to the stub.
+# Try to import the real Docker package.  If *anything* goes wrong we replace it
+# with the stub – we never let an exception escape the import.
 try:
-    import docker                     # real package, may be present
-except Exception:                     # package missing or broken
+    import docker  # real package, may be present
+    # Verify that we can actually talk to the daemon; any problem falls back.
+    docker.from_env().ping()
+except Exception:               # package missing, import error, ping failure, …
     docker = _dummy_docker_module()
     sys.modules['docker'] = docker
-else:
-    # The package is present – check whether we can actually talk to the
-    # daemon.  If not, replace it with the stub.
-    try:
-        docker.from_env().ping()
-    except Exception:                 # daemon not reachable, permission error, …
-        docker = _dummy_docker_module()
-        sys.modules['docker'] = docker
 
 
 class SimpleCalculator:
@@ -92,10 +96,26 @@ class SimpleCalculator:
           numeric scalar can be iterable (e.g. numpy.ndarray) and we want
           to treat it as a scalar.
         """
+        # Strings/bytes are iterable but should never be treated as a numeric
+        # collection.
         if isinstance(obj, (str, bytes)):
             return False
+
+        # NumPy nd‑arrays are *also* instances of ``numbers.Number`` (because they
+        # implement the numeric protocol) but they are containers that we want
+        # to iterate over.  If NumPy is available and ``obj`` is an ``ndarray`` we
+        # explicitly treat it as a collection.
+        if np is not None and isinstance(obj, np.ndarray):
+            return True
+
+        # Plain numeric scalars (int, float, Decimal, Fraction, …) must be
+        # excluded – they are not collections even if they happen to be
+        # iterable (e.g. ``numpy.float64`` can be iterable in some edge cases).
         if isinstance(obj, numbers.Number):
             return False
+
+        # Anything else that is iterable (list, tuple, set, generator, …) is a
+        # collection of numbers.
         return isinstance(obj, Iterable)
 
     # --------------------------------------------------------------------- #
