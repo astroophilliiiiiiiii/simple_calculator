@@ -12,11 +12,9 @@ class SimpleCalculator:
         return a - b
 
     def mul(self, *args):
-        # Return 0 for empty input to be consistent with add([]) → 0.
-        if len(args) == 0:
-            return 0
-        # No special falsy-value check – zero is allowed.
-        return reduce(operator.mul, args)
+        # Return the product of all supplied arguments.
+        # For an empty argument list the mathematical identity is 1.
+        return reduce(operator.mul, args, 1)
 
     def div(self, a, b):
         # Let Python raise ZeroDivisionError for b == 0.
