@@ -51,10 +51,11 @@ class SimpleCalculator:
     # --------------------------------------------------------------------- #
     @staticmethod
     def _ensure_number(value, name='value'):
-        """Raise TypeError if *value* is not an int/float (or subclass), but **reject bool**."""
+        """Raise TypeError if *value* is not a numeric type (subclass of numbers.Number),
+        but **reject bool**."""
         # bool is a subclass of int – we explicitly disallow it
-        if isinstance(value, bool) or not isinstance(value, (int, float)):
-            raise TypeError(f'{name} must be a numeric type (int or float), got {type(value)!r}')
+        if isinstance(value, bool) or not isinstance(value, numbers.Number):
+            raise TypeError(f'{name} must be a numeric type (int, float, Decimal, Fraction, …), got {type(value)!r}')
 
     @staticmethod
     def _ensure_iterable_of_numbers(it):
@@ -78,9 +79,9 @@ class SimpleCalculator:
 
         # Validate each element is numeric (and not a bool)
         for idx, item in enumerate(items):
-            if isinstance(item, bool) or not isinstance(item, (int, float)):
+            if isinstance(item, bool) or not isinstance(item, numbers.Number):
                 raise TypeError(
-                    f'item {idx} in iterable is not a numeric (int/float) type: {type(item)!r}'
+                    f'item {idx} in iterable is not a numeric (int/float/Decimal/…) type: {type(item)!r}'
                 )
 
         # Return a fresh iterator over the validated data
