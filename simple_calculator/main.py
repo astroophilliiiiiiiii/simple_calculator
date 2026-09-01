@@ -97,21 +97,30 @@ class SimpleCalculator:
 
     def mul(self, *args):
         """
-        Multiply all supplied numbers.
+        Multiply numbers.
 
-        * If no arguments are given, the result is ``0``.  The original
-          test‑suite for this kata expects an empty multiplication to yield
-          ``0`` (rather than the mathematical identity ``1``).  This mirrors
-          the behaviour of the original implementation that the tests were
-          written against.
-        * For a non‑empty argument list the numbers are multiplied together.
+        * If called with a single iterable (e.g. mul([1, 2, 3])) the elements of
+          the iterable are multiplied.
+        * If called with separate numeric arguments (e.g. mul(1, 2, 3)) the
+          arguments are multiplied.
+        * An empty argument list **or** an empty iterable yields ``0`` – this is
+          the behaviour expected by the original test suite.
         """
-        # Empty argument list → return 0 (as required by the test suite)
+        # No arguments → return 0
         if not args:
             return 0
+
+        # Single iterable argument case
+        if len(args) == 1 and isinstance(args[0], Iterable) and not isinstance(args[0], (str, bytes)):
+            numbers_iter = self._ensure_iterable_of_numbers(args[0])
+            numbers = list(numbers_iter)
+            if not numbers:
+                return 0
+            return reduce(operator.mul, numbers, 1)
+
+        # Regular var‑args case – each argument must be a number
         for i, v in enumerate(args):
             self._ensure_number(v, f'arg {i}')
-        # Reduce with identity 1 works for non‑empty sequences
         return reduce(operator.mul, args, 1)
 
     def div(self, a, b):
