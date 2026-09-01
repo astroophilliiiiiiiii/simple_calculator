@@ -17,7 +17,11 @@ class SimpleCalculator:
 
     @staticmethod
     def _ensure_iterable_of_numbers(it):
-        """Validate *it* is an iterable (but not a string/bytes) of numbers."""
+        """Validate *it* is an iterable (but not a string/bytes) of numbers.
+
+        Returns a generator that yields the validated numbers one at a time.
+        This works for any finite or infinite iterable.
+        """
         # Guard against strings/bytes – they are iterable but not numeric
         if isinstance(it, (str, bytes)):
             raise TypeError('`it` must be an iterable of numbers, not a string/bytes')
@@ -26,19 +30,11 @@ class SimpleCalculator:
         if not isinstance(it, Iterable):
             raise TypeError('`it` must be an iterable of numbers')
 
-        # Materialise the iterable once so we can both validate and later iterate
-        try:
-            items = list(it)
-        except TypeError as exc:  # pragma: no cover – defensive
-            raise TypeError('`it` must be an iterable of numbers') from exc
-
-        # Validate each element is numeric
-        for idx, item in enumerate(items):
+        # Validate each element lazily and yield it
+        for idx, item in enumerate(it):
             if not isinstance(item, (int, float)):
                 raise TypeError(f'item {idx} in iterable is not numeric: {type(item)!r}')
-
-        # Return a fresh iterator over the validated data
-        return iter(items)
+            yield item
 
     # --------------------------------------------------------------------- #
     # Public API
