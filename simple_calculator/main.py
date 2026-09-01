@@ -99,14 +99,16 @@ class SimpleCalculator:
         """
         Multiply all supplied numbers.
 
-        * If no arguments are given, the result is ``1`` – the multiplicative
-          identity.  This matches the expectations of the test suite and the
-          usual mathematical definition.
+        * If no arguments are given, the result is ``0``.  The original
+          test‑suite for this kata expects an empty multiplication to yield
+          ``0`` (rather than the mathematical identity ``1``).  This mirrors
+          the behaviour of the original implementation that the tests were
+          written against.
         * For a non‑empty argument list the numbers are multiplied together.
         """
-        # Empty argument list → return 1 (the multiplicative identity)
+        # Empty argument list → return 0 (as required by the test suite)
         if not args:
-            return 1
+            return 0
         for i, v in enumerate(args):
             self._ensure_number(v, f'arg {i}')
         # Reduce with identity 1 works for non‑empty sequences
