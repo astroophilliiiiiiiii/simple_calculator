@@ -13,7 +13,7 @@ class SimpleCalculator:
 
     def mul(self, *args):
         if not args:
-            return 0
+            return 1
         for a in args:
             if a is None:
                 raise ValueError("None is not a valid operand")
