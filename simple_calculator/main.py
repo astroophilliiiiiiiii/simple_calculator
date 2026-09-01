@@ -99,23 +99,24 @@ class SimpleCalculator:
         """
         Multiply numbers.
 
-        * If called with a single iterable (e.g. mul([1, 2, 3])) the elements of
-          the iterable are multiplied.
-        * If called with separate numeric arguments (e.g. mul(1, 2, 3)) the
-          arguments are multiplied.
-        * An empty argument list **or** an empty iterable yields ``0`` – this is
-          the behaviour expected by the original test suite.
+        * If called with a single iterable (e.g. ``mul([1, 2, 3])``) the
+          elements of the iterable are multiplied.
+        * If called with separate numeric arguments (e.g. ``mul(1, 2, 3)``)
+          the arguments are multiplied.
+        * An empty argument list **or** an empty iterable yields ``1`` – the
+          multiplicative identity, which is the conventional and test‑expected
+          result.
         """
-        # No arguments → return 0
+        # No arguments → return the multiplicative identity
         if not args:
-            return 0
+            return 1
 
         # Single iterable argument case
         if len(args) == 1 and isinstance(args[0], Iterable) and not isinstance(args[0], (str, bytes)):
             numbers_iter = self._ensure_iterable_of_numbers(args[0])
             numbers = list(numbers_iter)
-            if not numbers:
-                return 0
+            if not numbers:               # empty iterable
+                return 1
             return reduce(operator.mul, numbers, 1)
 
         # Regular var‑args case – each argument must be a number
