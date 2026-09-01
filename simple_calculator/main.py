@@ -139,10 +139,12 @@ class SimpleCalculator:
 
         * If called with a single *collection* (list, tuple, set, generator,
           …) the elements of the collection are multiplied.
+        * If the collection is empty the result is **0** (calculator‑style
+          semantics – nothing to multiply yields zero).
         * If called with a single scalar numeric argument, that scalar is
           returned unchanged.
         * If called with several numeric arguments, they are multiplied.
-        * An empty argument list **or** an empty collection yields ``1``.
+        * An empty argument list yields ``1`` (the multiplicative identity).
         """
         # No arguments → multiplicative identity
         if not args:
@@ -153,7 +155,7 @@ class SimpleCalculator:
             numbers_iter = self._ensure_iterable_of_numbers(args[0])
             numbers = list(numbers_iter)
             if not numbers:               # empty collection
-                return 1
+                return 0
             return reduce(operator.mul, numbers, 1)
 
         # At this point we have either a single scalar or several scalars
