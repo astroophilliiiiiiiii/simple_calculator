@@ -51,10 +51,9 @@ class SimpleCalculator:
     # --------------------------------------------------------------------- #
     @staticmethod
     def _ensure_number(value, name='value'):
-        """Raise TypeError if *value* is not a numeric type (subclass of numbers.Number),
-        but **reject bool**."""
-        # bool is a subclass of int – we explicitly disallow it
-        if isinstance(value, bool) or not isinstance(value, numbers.Number):
+        """Raise TypeError if *value* is not a numeric type (subclass of numbers.Number)."""
+        # ``bool`` is a subclass of ``int``; we now accept it as a legitimate number.
+        if not isinstance(value, numbers.Number):
             raise TypeError(f'{name} must be a numeric type (int, float, Decimal, Fraction, …), got {type(value)!r}')
 
     @staticmethod
@@ -79,7 +78,7 @@ class SimpleCalculator:
 
         # Validate each element is numeric (and not a bool)
         for idx, item in enumerate(items):
-            if isinstance(item, bool) or not isinstance(item, numbers.Number):
+            if not isinstance(item, numbers.Number):
                 raise TypeError(
                     f'item {idx} in iterable is not a numeric (int/float/Decimal/…) type: {type(item)!r}'
                 )
