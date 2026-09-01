@@ -12,15 +12,15 @@ class SimpleCalculator:
         return a - b
 
     def mul(self, *args):
-        if not all(args):
-            raise ValueError
+        # Return 0 for empty input to be consistent with add([]) → 0.
+        if len(args) == 0:
+            return 0
+        # No special falsy-value check – zero is allowed.
         return reduce(operator.mul, args)
 
     def div(self, a, b):
-        try:
-            return a / b
-        except ZeroDivisionError:
-            return float("inf")
+        # Let Python raise ZeroDivisionError for b == 0.
+        return a / b
 
     def avg(self, it, lt=None, ut=None):
         count = 0
