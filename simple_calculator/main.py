@@ -1,60 +1,53 @@
-# simple_calculator.py
-# -*- coding: utf-8 -*-
-
-import operator
-from functools import reduce
-
-
 class SimpleCalculator:
     def add(self, *args):
+        """Return the sum of all provided arguments."""
         return sum(args)
 
     def sub(self, a, b):
+        """Return the result of subtracting b from a."""
         return a - b
 
     def mul(self, *args):
-        """
-        Multiply all arguments together.
+        """Return the product of all provided arguments.
 
         Raises:
-            ValueError: If no arguments are supplied.
+            ValueError: If no arguments are provided.
         """
         if not args:
-            raise ValueError("At least one operand is required")
-        # Using an initializer of 1 allows multiplication of any number of arguments,
-        # including a single argument, and correctly handles zero values.
-        return reduce(operator.mul, args, 1)
+            raise ValueError("At least one argument required")
+        result = 1
+        for number in args:
+            result *= number
+        return result
 
-    def div(self, a, b):
-        """
-        Divide ``a`` by ``b``.
+    def avg(self, data, lt=None, ut=None):
+        """Calculate the average of a list, optionally filtering values.
+
+        Args:
+            data (list of numbers): The list of numbers to average.
+            lt (number, optional): Lower bound (inclusive). Values less than this are excluded.
+            ut (number, optional): Upper bound (inclusive). Values greater than this are excluded.
 
         Returns:
-            float: The quotient when ``b`` is non‑zero.
-            str:   An error message when ``b`` is zero.
+            float: The average of the filtered list, or 0 if the list is empty after filtering.
+        """
+        filtered = [
+            x for x in data
+            if (lt is None or x >= lt) and (ut is None or x <= ut)
+        ]
+        if not filtered:
+            return 0
+        return sum(filtered) / len(filtered)
 
-        The method does not raise ``ZeroDivisionError``; instead it returns a
-        clear, user‑friendly message so that callers (e.g. a UI) can display it
-        without crashing.
+    def div(self, a, b):
+        """Divide *a* by *b*.
+
+        Returns:
+            float: The quotient when ``b`` is not zero.
+
+        Raises:
+            ZeroDivisionError: If ``b`` is zero, with a clear error message.
         """
         if b == 0:
-            # Graceful handling – return a message instead of raising.
-            return "Error: Division by zero is not allowed"
+            raise ZeroDivisionError("Division by zero is not allowed")
         return a / b
-
-    def avg(self, it, lt=None, ut=None):
-        count = 0
-        total = 0
-
-        for number in it:
-            if lt is not None and number < lt:
-                continue
-            if ut is not None and number > ut:
-                continue
-            count += 1
-            total += number
-
-        if count == 0:
-            return 0
-
-        return total / count
