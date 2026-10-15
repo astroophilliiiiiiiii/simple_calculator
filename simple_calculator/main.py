@@ -1,3 +1,4 @@
+# simple_calculator.py
 # -*- coding: utf-8 -*-
 
 import operator
@@ -12,15 +13,34 @@ class SimpleCalculator:
         return a - b
 
     def mul(self, *args):
-        if not all(args):
-            raise ValueError
-        return reduce(operator.mul, args)
+        """
+        Multiply all arguments together.
+
+        Raises:
+            ValueError: If no arguments are supplied.
+        """
+        if not args:
+            raise ValueError("At least one operand is required")
+        # Using an initializer of 1 allows multiplication of any number of arguments,
+        # including a single argument, and correctly handles zero values.
+        return reduce(operator.mul, args, 1)
 
     def div(self, a, b):
-        try:
-            return a / b
-        except ZeroDivisionError:
-            return float("inf")
+        """
+        Divide ``a`` by ``b``.
+
+        Returns:
+            float: The quotient when ``b`` is non‑zero.
+            str:   An error message when ``b`` is zero.
+
+        The method does not raise ``ZeroDivisionError``; instead it returns a
+        clear, user‑friendly message so that callers (e.g. a UI) can display it
+        without crashing.
+        """
+        if b == 0:
+            # Graceful handling – return a message instead of raising.
+            return "Error: Division by zero is not allowed"
+        return a / b
 
     def avg(self, it, lt=None, ut=None):
         count = 0
