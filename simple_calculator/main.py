@@ -1,3 +1,9 @@
+simple_calculator.py
+class CalculatorError(Exception):
+    """Base class for calculator‑specific errors."""
+    pass
+
+
 class SimpleCalculator:
     def add(self, *args):
         """Return the sum of all provided arguments."""
@@ -46,8 +52,21 @@ class SimpleCalculator:
             float: The quotient when ``b`` is not zero.
 
         Raises:
-            ZeroDivisionError: If ``b`` is zero, with a clear error message.
+            CalculatorError: If ``b`` is zero, with a clear error message.
         """
         if b == 0:
-            raise ZeroDivisionError("Division by zero is not allowed")
+            raise CalculatorError("Division by zero is not allowed")
         return a / b
+
+tests/test_simple_calculator.py
+import pytest
+from simple_calculator import SimpleCalculator, CalculatorError
+
+@pytest.fixture
+def calc():
+    return SimpleCalculator()
+
+def test_division_by_zero_raises_calculator_error(calc):
+    with pytest.raises(CalculatorError) as excinfo:
+        calc.div(10, 0)
+    assert "Division by zero is not allowed" in str(excinfo.value)
