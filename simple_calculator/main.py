@@ -25,9 +25,10 @@ class SimpleCalculator:
     def div(self, a, b):
         """Divide a by b.
 
-        Raises:
-            CalculatorError: If b is zero.
+        Returns:
+            float: the quotient when b != 0
+            str: an error message when b == 0
         """
         if b == 0:
-            raise CalculatorError("Division by zero is not allowed")
+            return "Error: Division by zero is not allowed"
         return a / b
