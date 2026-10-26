@@ -22,13 +22,15 @@ class SimpleCalculator:
             raise CalculatorError("Cannot compute average of empty list")
         return sum(numbers) / len(numbers)
 
-    def div(self, a, b):
+    def div(self, a: float, b: float) -> float:
         """Divide a by b.
 
         Returns:
             float: the quotient when b != 0
-            str: an error message when b == 0
+
+        Raises:
+            CalculatorError: if b == 0
         """
         if b == 0:
-            return "Error: Division by zero is not allowed"
+            raise CalculatorError("Division by zero is not allowed")
         return a / b
