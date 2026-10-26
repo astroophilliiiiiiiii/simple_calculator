@@ -21,11 +21,11 @@ class SimpleCalculator:
         """Return the product of a and b."""
         return a * b
 
-    def avg(self, numbers):
+    def avg(self, values):
         """Return the average of a list of numbers."""
-        if not numbers:
+        if not values:
             raise CalculatorError("Cannot compute average of empty list")
-        return sum(numbers) / len(numbers)
+        return sum(values) / len(values)
 
     def div(self, a: float, b: float) -> float:
         """Divide a by b.
