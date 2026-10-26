@@ -1,6 +1,11 @@
+import numbers
+
 class CalculatorError(Exception):
     """Custom exception for calculator errors."""
     pass
+
+# Tolerance used to treat a denominator as “zero”.
+EPSILON = 1e-12
 
 
 class SimpleCalculator:
@@ -25,12 +30,24 @@ class SimpleCalculator:
     def div(self, a: float, b: float) -> float:
         """Divide a by b.
 
+        The method validates that both arguments are numeric and treats any
+        denominator whose absolute value is smaller than ``EPSILON`` as zero.
+
         Returns:
-            float: the quotient when b != 0
+            float: the quotient when b is not (effectively) zero.
 
         Raises:
-            CalculatorError: if b == 0
+            CalculatorError: if b is zero (or effectively zero) or if the
+                inputs are not numeric.
         """
-        if b == 0:
-            raise CalculatorError("Division by zero is not allowed")
+        # Type validation (accept any real number)
+        if not isinstance(a, numbers.Real):
+            raise CalculatorError(f"Invalid dividend {a!r}: must be a real number")
+        if not isinstance(b, numbers.Real):
+            raise CalculatorError(f"Invalid divisor {b!r}: must be a real number")
+
+        # Zero-denominator handling with epsilon tolerance
+        if abs(b) < EPSILON:
+            raise CalculatorError(f"Division by zero is not allowed (denominator={b!r})")
+
         return a / b
