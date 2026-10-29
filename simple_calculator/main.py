@@ -8,10 +8,9 @@ class CalculatorError(Exception):
 
 
 class SimpleCalculator:
-    # Tolerance used to decide whether a floating‑point divisor is “zero”.
-    # 1e‑12 works well for typical double‑precision calculations; adjust if
-    # your domain needs a different precision.
-    _ZERO_TOL = 1e-12
+    # Zero‑division tolerance – a divisor whose absolute value is less than or
+    # equal to this threshold is considered zero.
+    _ZERO_TOL = 1e-12   # retained for backward compatibility.
 
     # -----------------------------------------------------------------
     #  ADD / SUB / MUL
@@ -42,16 +41,19 @@ class SimpleCalculator:
         Raises:
             CalculatorError: if no operands are provided or any operand
                 is not a real number.
-            ValueError: if any operand is zero.
+            ValueError: if any operand is zero (zero‑multiplication is
+                considered an error for this calculator).
         """
         if not values:
             raise CalculatorError("mul() requires at least one operand")
-        product = 1
+        # Validate operands and check for zero factor.
         for v in values:
             if not isinstance(v, numbers.Real):
                 raise CalculatorError(f"Invalid operand {v!r}: must be a real number")
             if v == 0:
                 raise ValueError("Multiplication by zero is not allowed")
+        product = 1
+        for v in values:
             product *= v
         return product
 
@@ -61,9 +63,11 @@ class SimpleCalculator:
     def div(self, a: float, b: float) -> float:
         """Divide *a* by *b*.
 
-        Returns ``math.inf`` when *b* is zero (or effectively zero) instead
-        of raising an exception – this matches the behaviour required by the
-        tests.
+        Returns ``math.inf`` (or ``-math.inf``) when *b* is zero (within the
+        tolerance defined by ``_ZERO_TOL``) instead of raising an exception.
+
+        Raises:
+            CalculatorError: for invalid operand types or non‑finite values.
         """
         # Type validation (accept any real number)
         if not isinstance(a, numbers.Real):
@@ -77,10 +81,9 @@ class SimpleCalculator:
         if math.isnan(b) or math.isinf(b):
             raise CalculatorError(f"Invalid divisor {b!r}: must be a finite number")
 
-        # Zero‑denominator handling – pure absolute‑tolerance check
-        # The divisor is considered zero when |b| <= _ZERO_TOL
+        # Zero‑denominator handling – return signed infinity when divisor is effectively zero.
         if abs(b) <= self._ZERO_TOL:
-            return math.inf
+            return math.copysign(math.inf, a)
 
         return a / b
 
