@@ -40,7 +40,7 @@ class SimpleCalculator:
 
         Raises:
             CalculatorError: if no operands are provided or any operand
-                is not a real number.
+                is a real number.
             ValueError: if any operand is zero (zero‑multiplication is
                 considered an error for this calculator).
         """
@@ -63,8 +63,12 @@ class SimpleCalculator:
     def div(self, a: float, b: float) -> float:
         """Divide *a* by *b*.
 
-        Returns ``math.inf`` (or ``-math.inf``) when *b* is zero (within the
-        tolerance defined by ``_ZERO_TOL``) instead of raising an exception.
+        Returns:
+            float: The quotient ``a / b``. If the divisor is effectively zero
+            (|b| ≤ ``_ZERO_TOL``) the function returns an infinite value
+            (``math.inf`` or ``-math.inf`` depending on the sign of *a*; if
+            *a* is also zero the result is ``math.nan``) instead of raising
+            ``ZeroDivisionError``.
 
         Raises:
             CalculatorError: for invalid operand types or non‑finite values.
@@ -81,8 +85,10 @@ class SimpleCalculator:
         if math.isnan(b) or math.isinf(b):
             raise CalculatorError(f"Invalid divisor {b!r}: must be a finite number")
 
-        # Zero‑denominator handling – return signed infinity when divisor is effectively zero.
+        # Zero‑denominator handling – return infinities or NaN per Python semantics.
         if abs(b) <= self._ZERO_TOL:
+            if a == 0:
+                return math.nan
             return math.copysign(math.inf, a)
 
         return a / b
