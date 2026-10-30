@@ -32,6 +32,13 @@ class SimpleCalculator:
         except ZeroDivisionError:
             return float("inf")
 
+    def mod(self, a, b):
+        """Return the remainder of a divided by b."""
+        try:
+            return a % b
+        except ZeroDivisionError:
+            return float("inf")
+
     def pow(self, a: float, b: float) -> float:
         """Return *a* raised to the power of *b*.
 
