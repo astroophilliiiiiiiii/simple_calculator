@@ -38,3 +38,7 @@ class SimpleCalculator:
             return 0
 
         return total / count
+
+    def pow(self, a, b):
+        """Return a raised to the power of b."""
+        return a ** b
