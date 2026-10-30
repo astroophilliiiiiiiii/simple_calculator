@@ -22,6 +22,10 @@ class SimpleCalculator:
         except ZeroDivisionError:
             return float("inf")
 
+    def pow(self, a, b):
+        """Return a raised to the power of b."""
+        return a ** b
+
     def avg(self, it, lt=None, ut=None):
         count = 0
         total = 0
