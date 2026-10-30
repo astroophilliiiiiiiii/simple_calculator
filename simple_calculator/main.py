@@ -12,8 +12,18 @@ class SimpleCalculator:
         return a - b
 
     def mul(self, *args):
-        if not all(args):
+        """
+        Multiply all given arguments.
+
+        Raises:
+            ValueError: If any argument is exactly zero.
+        """
+        # Raise only for numeric zero, not for other falsy values.
+        if any(arg == 0 for arg in args):
             raise ValueError
+        # ``reduce`` works for one or more arguments; for an empty call we
+        # let Python raise the natural TypeError (mirroring the behaviour of
+        # the built‑in ``math.prod`` in older Python versions).
         return reduce(operator.mul, args)
 
     def div(self, a, b):
