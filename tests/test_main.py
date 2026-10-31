@@ -165,3 +165,36 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+# New tests for the square method
+
+def test_square_positive_integer():
+    calc = SimpleCalculator()
+    assert calc.square(7) == 49
+
+
+def test_square_negative_integer():
+    calc = SimpleCalculator()
+    assert calc.square(-4) == 16
+
+
+def test_square_zero():
+    calc = SimpleCalculator()
+    assert calc.square(0) == 0
+
+
+def test_square_decimal():
+    calc = SimpleCalculator()
+    assert calc.square(2.5) == 6.25
+
+
+def test_square_invalid_string():
+    calc = SimpleCalculator()
+    with pytest.raises(TypeError):
+        calc.square("not a number")
+
+
+def test_square_invalid_none():
+    calc = SimpleCalculator()
+    with pytest.raises(TypeError):
+        calc.square(None)

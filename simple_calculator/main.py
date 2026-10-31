@@ -55,3 +55,13 @@ class SimpleCalculator:
             return 1
         # Compute product 1 * 2 * ... * n
         return reduce(operator.mul, range(1, n + 1))
+
+    def square(self, n):
+        """Return the square of *n*.
+
+        Accepts ``int`` or ``float`` (including negative, zero and decimal
+        numbers).  Any other type raises ``TypeError``.
+        """
+        if not isinstance(n, (int, float)):
+            raise TypeError("square() only accepts numeric (int or float) values")
+        return n * n
