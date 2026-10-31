@@ -81,6 +81,13 @@ def test_mul_by_zero_raises_exception():
         calculator.mul(3, 0)
 
 
+def test_mul_by_false_raises_exception():
+    calculator = SimpleCalculator()
+
+    with pytest.raises(ValueError):
+        calculator.mul(3, False)
+
+
 def test_avg_correct_average():
     calculator = SimpleCalculator()
 

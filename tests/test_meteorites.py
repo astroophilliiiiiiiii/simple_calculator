@@ -42,3 +42,12 @@ def test_average_mass():
     result = metstats.average_mass(metstats.get_data())
 
     assert result == 370.5
+
+
+def test_average_mass_empty_data_returns_zero():
+    metstats = MeteoriteStats()
+    metstats.get_data = mock.Mock()
+    metstats.get_data.return_value = []
+
+    result = metstats.average_mass(metstats.get_data())
+    assert result == 0
