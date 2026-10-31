@@ -19,22 +19,28 @@ class SimpleCalculator:
     def div(self, *args):
         """Divide a sequence of numbers left‑to‑right.
 
-        Returns ``float('inf')`` if **any** divisor is zero (including ``0``,
-        ``0.0``, ``-0.0``, ``Decimal(0)`` etc.).
+        Returns ``float('inf')`` if **any** divisor is zero‑like
+        (e.g. ``0``, ``0.0``, ``-0.0``, ``Decimal(0)`` etc.).
         Raises ``ValueError`` if fewer than two arguments are supplied.
         Otherwise returns the result of the left‑to‑right division as a ``float``.
         """
         if len(args) < 2:
             raise ValueError("div() requires at least two arguments")
 
-        # Start with the first operand, cast to float for consistent return type.
+        # Start with the first operand, cast to float for a consistent return type.
         result = float(args[0])
 
         for divisor in args[1:]:
+            # Convert divisor to float first – works for int, float, Decimal,
+            # and any numeric type implementing ``__float__``.
+            divisor_f = float(divisor)
+
             # Any zero‑like divisor should cause an immediate ``inf`` result.
-            if divisor == 0:
+            if divisor_f == 0.0:
                 return float("inf")
-            result = result / divisor
+
+            # Perform the division using the float representation.
+            result = result / divisor_f
 
         return result
 
