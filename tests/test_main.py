@@ -165,3 +165,18 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+
+def test_cube_positive_number():
+    calculator = SimpleCalculator()
+    assert calculator.cube(3) == 27
+
+
+def test_cube_zero():
+    calculator = SimpleCalculator()
+    assert calculator.cube(0) == 0
+
+
+def test_cube_negative_number():
+    calculator = SimpleCalculator()
+    assert calculator.cube(-4) == -64

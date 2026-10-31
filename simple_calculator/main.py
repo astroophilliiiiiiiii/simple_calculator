@@ -38,3 +38,19 @@ class SimpleCalculator:
             return 0
 
         return total / count
+
+    def cube(self, n):
+        """
+        Return the cube of ``n`` (n³).
+
+        Parameters
+        ----------
+        n : int or float
+            The number to be cubed.
+
+        Returns
+        -------
+        int or float
+            ``n`` raised to the third power.
+        """
+        return n ** 3
