@@ -16,11 +16,23 @@ class SimpleCalculator:
             raise ValueError
         return reduce(operator.mul, args)
 
-    def div(self, a, b):
-        try:
-            return a / b
-        except ZeroDivisionError:
-            return float("inf")
+    def div(self, *args):
+        """Divide a sequence of numbers left‑to‑right.
+
+        Returns ``float('inf')`` if any divisor is zero, mirroring the original
+        behaviour for a single division by zero.
+        """
+        if not args:
+            raise ValueError("At least one operand is required for division")
+
+        # Start with the first operand as the initial result
+        result = args[0]
+        for divisor in args[1:]:
+            try:
+                result = operator.truediv(result, divisor)
+            except ZeroDivisionError:
+                return float("inf")
+        return result
 
     def avg(self, it, lt=None, ut=None):
         count = 0

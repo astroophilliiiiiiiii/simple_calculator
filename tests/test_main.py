@@ -165,3 +165,34 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+# New division edge‑case tests
+
+def test_div_multiple_operands():
+    calculator = SimpleCalculator()
+    result = calculator.div(100, 2, 5)  # 100 / 2 / 5 = 10.0
+    assert result == 10.0
+
+
+def test_div_by_zero_in_middle():
+    calculator = SimpleCalculator()
+    result = calculator.div(100, 0, 5)  # division by zero occurs at second step
+    assert result == float("inf")
+
+
+def test_div_by_zero_at_end():
+    calculator = SimpleCalculator()
+    result = calculator.div(100, 2, 0)  # division by zero occurs at last step
+    assert result == float("inf")
+
+
+def test_div_negative_numbers():
+    calculator = SimpleCalculator()
+    result = calculator.div(-8, 2)  # -8 / 2 = -4.0
+    assert result == -4.0
+
+
+def test_div_decimal_numbers():
+    calculator = SimpleCalculator()
+    result = calculator.div(5.5, 2)  # 5.5 / 2 = 2.75
+    assert result == 2.75
