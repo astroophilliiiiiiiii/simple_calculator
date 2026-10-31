@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import operator
+import math
 from functools import reduce
 
 
@@ -42,3 +43,14 @@ class SimpleCalculator:
     def pow(self, a, b):
         """Return a raised to the power of b."""
         return a ** b
+
+    def sqrt(self, n):
+        """Return the square root of ``n``.
+
+        * For ``n >= 0`` the mathematical square root is returned.
+        * For ``n < 0`` the function returns ``None`` instead of raising
+          an exception, providing graceful handling of invalid input.
+        """
+        if n < 0:
+            return None
+        return math.sqrt(n)

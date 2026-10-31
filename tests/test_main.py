@@ -165,3 +165,21 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+
+def test_sqrt_positive():
+    calculator = SimpleCalculator()
+    result = calculator.sqrt(9)
+    assert result == 3
+
+
+def test_sqrt_zero():
+    calculator = SimpleCalculator()
+    result = calculator.sqrt(0)
+    assert result == 0
+
+
+def test_sqrt_negative():
+    calculator = SimpleCalculator()
+    result = calculator.sqrt(-4)
+    assert result is None
