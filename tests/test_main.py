@@ -165,3 +165,36 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+
+def test_div_multiple_operands():
+    calculator = SimpleCalculator()
+    # 100 / 5 / 2 = 10.0
+    assert calculator.div(100, 5, 2) == 10.0
+
+
+def test_div_negative_numbers():
+    calculator = SimpleCalculator()
+    assert calculator.div(-10, 2) == -5
+    assert calculator.div(10, -2) == -5
+
+
+def test_div_decimal_numbers():
+    calculator = SimpleCalculator()
+    assert calculator.div(5.5, 2) == 2.75
+
+
+def test_div_by_zero_in_chain():
+    calculator = SimpleCalculator()
+    # The zero divisor appears after a valid division; should return inf.
+    assert calculator.div(10, 2, 0) == float("inf")
+
+
+def test_div_zero_numerator():
+    calculator = SimpleCalculator()
+    assert calculator.div(0, 5) == 0
+
+
+def test_div_single_operand_returns_itself():
+    calculator = SimpleCalculator()
+    assert calculator.div(42) == 42

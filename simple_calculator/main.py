@@ -16,11 +16,33 @@ class SimpleCalculator:
             raise ValueError
         return reduce(operator.mul, args)
 
-    def div(self, a, b):
-        try:
-            return a / b
-        except ZeroDivisionError:
-            return float("inf")
+    def div(self, *args):
+        """
+        Divide a sequence of numbers left‑to‑right.
+
+        * If *no* arguments are supplied a ``ValueError`` is raised – the
+          original API always required at least two numbers, so this mirrors
+          that expectation.
+        * If any divisor (any argument after the first) is zero the method
+          returns ``float('inf')`` instead of raising ``ZeroDivisionError``.
+        * Works with negative numbers, decimals and a zero numerator.
+        * When a single argument is supplied the method simply returns it,
+          matching the intuitive “divide by nothing” behaviour.
+        """
+        if not args:
+            raise ValueError("At least one operand is required for division")
+
+        # Start with the first value; if there is only one value we just return it.
+        result = args[0]
+
+        for divisor in args[1:]:
+            try:
+                result = result / divisor
+            except ZeroDivisionError:
+                # Any zero divisor results in an infinite value.
+                return float("inf")
+
+        return result
 
     def avg(self, it, lt=None, ut=None):
         count = 0
