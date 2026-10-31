@@ -9,6 +9,30 @@ class SimpleCalculator:
         return sum(args)
 
     def sub(self, a, b):
+        """
+        Subtract ``b`` from ``a``.
+
+        Parameters
+        ----------
+        a, b : int | float
+            Operands for the subtraction.  Both must be real numbers.
+
+        Returns
+        -------
+        int | float
+            The arithmetic difference ``a - b``.
+
+        Raises
+        ------
+        TypeError
+            If either ``a`` or ``b`` is not an ``int`` or ``float``.
+        """
+        # Validate input – we only accept real numeric types.
+        if not isinstance(a, (int, float)):
+            raise TypeError(f"First operand must be a number, got {type(a).__name__}")
+        if not isinstance(b, (int, float)):
+            raise TypeError(f"Second operand must be a number, got {type(b).__name__}")
+
         return a - b
 
     def mul(self, *args):
