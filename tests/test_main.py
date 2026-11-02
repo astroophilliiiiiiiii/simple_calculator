@@ -165,3 +165,15 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+
+def test_mul_no_arguments():
+    calculator = SimpleCalculator()
+    with pytest.raises(ValueError):
+        calculator.mul()
+
+
+def test_mul_single_argument():
+    calculator = SimpleCalculator()
+    result = calculator.mul(7)
+    assert result == 7

@@ -12,6 +12,13 @@ class SimpleCalculator:
         return a - b
 
     def mul(self, *args):
+        '''Multiply all provided numbers.
+
+        Raises:
+            ValueError: If no arguments are provided or any argument is zero.
+        '''
+        if len(args) == 0:
+            raise ValueError
         if not all(args):
             raise ValueError
         return reduce(operator.mul, args)
