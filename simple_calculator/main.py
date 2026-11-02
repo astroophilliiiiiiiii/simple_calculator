@@ -2,6 +2,7 @@
 
 import operator
 from functools import reduce
+import numbers
 
 
 class SimpleCalculator:
@@ -20,7 +21,7 @@ class SimpleCalculator:
         try:
             return a / b
         except ZeroDivisionError:
-            return float("inf")
+            return float('inf')
 
     def avg(self, it, lt=None, ut=None):
         count = 0
@@ -38,3 +39,18 @@ class SimpleCalculator:
             return 0
 
         return total / count
+
+    def square(self, n):
+        """Return the square of *n*.
+
+        Supports any real number (int, float, Decimal, etc.).
+        Raises ``TypeError`` if *n* is not a real number.
+        """
+        try:
+            result = n * n
+        except Exception as exc:
+            raise TypeError('square method expects a real number') from exc
+        # Disallow complex results even if multiplication succeeded
+        if isinstance(result, complex):
+            raise TypeError('square method expects a real number')
+        return result
