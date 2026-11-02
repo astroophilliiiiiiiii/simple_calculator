@@ -1,1 +1,1 @@
--r requirements/prod.txt
+fastapi>=0.110.0
