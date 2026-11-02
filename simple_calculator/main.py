@@ -38,3 +38,21 @@ class SimpleCalculator:
             return 0
 
         return total / count
+
+    def factorial(self, n):
+        """
+        Return the factorial of a non‑negative integer ``n``.
+
+        * ``n`` must be an ``int`` – otherwise a ``TypeError`` is raised.
+        * ``n`` must be >= 0 – otherwise a ``ValueError`` is raised.
+        * ``0!`` and ``1!`` both return ``1``.
+        """
+        if not isinstance(n, int):
+            raise TypeError('factorial() argument must be an integer')
+        if n < 0:
+            raise ValueError('factorial() not defined for negative numbers')
+
+        result = 1
+        for i in range(2, n + 1):
+            result *= i
+        return result
