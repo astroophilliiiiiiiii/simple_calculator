@@ -38,3 +38,13 @@ class SimpleCalculator:
             return 0
 
         return total / count
+
+    def power(self, base, exponent):
+        """Return base raised to the exponent.
+
+        Supports positive, negative, zero, and fractional exponents.
+        Raises ValueError if either argument is not a numeric type.
+        """
+        if not isinstance(base, (int, float)) or not isinstance(exponent, (int, float)):
+            raise ValueError('Both base and exponent must be numeric')
+        return base ** exponent
