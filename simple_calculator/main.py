@@ -38,3 +38,13 @@ class SimpleCalculator:
             return 0
 
         return total / count
+
+    def percentage(self, part, total):
+        """Return the percentage of *part* with respect to *total*.
+
+        If *total* is zero, ``None`` is returned to avoid a ``ZeroDivisionError``.
+        Supports both ``int`` and ``float`` inputs.
+        """
+        if total == 0:
+            return None
+        return (part / total) * 100

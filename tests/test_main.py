@@ -165,3 +165,18 @@ def test_avg_accepts_generators():
     calculator = SimpleCalculator()
     result = calculator.avg(i for i in [2, 5, 12, 98])
     assert result == 29.25
+
+
+def test_percentage_normal_int():
+    calculator = SimpleCalculator()
+    assert calculator.percentage(2, 5) == 40
+
+
+def test_percentage_normal_float():
+    calculator = SimpleCalculator()
+    assert calculator.percentage(1.5, 3) == 50
+
+
+def test_percentage_zero_total_returns_none():
+    calculator = SimpleCalculator()
+    assert calculator.percentage(5, 0) is None
